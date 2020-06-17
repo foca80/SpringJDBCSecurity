@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+    <div sec:authorize="hasAuthority('ADMINISTRADOR')">
+    Estoy es mostrado si el usuario tiene el rol de <span sec:authentication="principal.authorities"></span> 
+   </div>
+	<h1>Bienvenido</h1>
+	<span sec:authorize="isAuthenticated()"> | 
+	 Logged user: <span sec:authentication="name"></span> |
+     Roles: <span sec:authentication="principal.authorities"></span> 
+    </span>
+   <br>
+   <span sec:authorize="isAuthenticated()">
+       ESTOY AUTENTICADO!!!!
+   </span>
+   <br>
+
+   <p th:text="${session.tienda}" th:unless="${session == null}">[...]</p>
+	<hr>
+	<a href="/addUser">Nuevo</a>--- <a th:href="@{/logout}">Salir</a>----<a href="/login">Login</a>/>
+	<br>
+	<table>
+		<thead>
+			<tr>
+				<th>User</th>
+				<th>Nombre</th>
+				<th>Email</th>
+				<th>Status</th>
+				<th>Fecha Registro</th>
+				<th>Edit</th>
+				<th>Delete</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="user : ${users}">
+				<td th:text="${user.username}"></td>
+				<td th:text="${user.nombre}"></td>
+				<td th:text="${user.email}"></td>
+				<td th:text="${user.estatus}"></td>
+				<td th:text="${#dates.format(user.fechaRegistro, 'dd-MM-yyyy')}"></td>
+				<td>
+				   <!-- select 	th:text="{users.perfiles.perfil}">
+									<option th:each="perfiles : ${users.perfiles}"
+										th:value="${perfiles.id}" th:utext="${prefiles.perfil}" />
+				   </select> -->
+				</td>
+				<td><a th:href="@{/edit/{id}(id=${user.id})}">Update</a></td>
+				<td><a th:href="@{/delete/{id}(id=${user.id})}">Delete</a></td>
+			</tr>
+		</tbody>
+
+	</table>
+</body>
+</html>
